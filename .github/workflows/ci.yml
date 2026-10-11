@@ -130,7 +130,9 @@ jobs:
 
           void main() {
             IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-            test('decodes LTC through the bundled native library', () {
+            // integration_test reports only testWidgets results.
+            testWidgets('decodes LTC through the bundled native library',
+                (tester) async {
               final bytes = encodeLtcSequence(
                 sampleRate: 48000, fps: 25, startHours: 1, startMinutes: 0,
                 startSeconds: 0, startFrames: 0, frameCount: 10);
