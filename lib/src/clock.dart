@@ -56,12 +56,12 @@
 /// ## Monotonic timing
 ///
 /// Both the host-time mapping above and this model's own staleness check
-/// (see [usable], [_stale]) deliberately avoid
+/// (see [usable]) deliberately avoid
 /// `DateTime.now().microsecondsSinceEpoch` / [DateTime.now]. That is wall
 /// clock time — a system NTP step or manual clock change between two
 /// timestamps is indistinguishable, from this model's point of view, from
 /// real elapsed time. A backward step can make a stale source look fresh
-/// (or an already-fresh source look impossibly stale, if `_stale`'s
+/// (or an already-fresh source look impossibly stale, if the staleness
 /// subtraction goes negative and duration comparisons behave surprisingly);
 /// worse, [tcAtHostMicros] extrapolates the regression fit *forward* by
 /// whatever `hostMicros - offset` implies, so a forward wall-clock jump can
@@ -189,16 +189,6 @@ class LtcClockModel {
 
   int get _nowNs => _elapsedSinceStart().inMicroseconds * 1000;
 
-  // When the newest observation arrived, on the `elapsedSinceStart` clock;
-  // `null` after a reset. The fit is not reported once it is older than
-  // [staleAfter].
-  Duration? _lastObservationElapsed;
-
-  bool get _stale {
-    final last = _lastObservationElapsed;
-    return last == null || _elapsedSinceStart() - last > staleAfter;
-  }
-
   NativeClockState get _state => _native.state(_nowNs);
 
   /// Number of observations currently retained in the sliding window.
@@ -215,7 +205,7 @@ class LtcClockModel {
   /// fresh observations are available.
   double? get measuredFrameRate {
     final s = _state;
-    return s.hasFit && !_stale ? s.b : null;
+    return s.hasFit ? s.b : null;
   }
 
   /// Fit quality: root-mean-square residual of the window's points against
@@ -223,7 +213,7 @@ class LtcClockModel {
   /// [measuredFrameRate].
   double? get residualRms {
     final s = _state;
-    return s.hasFit && !_stale ? s.residual : null;
+    return s.hasFit ? s.residual : null;
   }
 
   /// The nearest of 24/25/30 to [measuredFrameRate], but only when that
@@ -246,10 +236,11 @@ class LtcClockModel {
   /// sample time [sampleTime] seconds. With [framesPerDay], a rollover at
   /// midnight is unwrapped rather than treated as a jump. A jump of more
   /// than [jumpResetFrames] from the current fit resets the window.
-  void addObservation(double sampleTime, double tcFrames, {int? framesPerDay}) {
-    _lastObservationElapsed = _elapsedSinceStart();
-    _native.addObservation(sampleTime, tcFrames, framesPerDay ?? 0, _nowNs);
-  }
+  void addObservation(
+    double sampleTime,
+    double tcFrames, {
+    int? framesPerDay,
+  }) => _native.addObservation(sampleTime, tcFrames, framesPerDay ?? 0, _nowNs);
 
   /// Records that the host observed sample-clock time [sampleTime] (seconds
   /// — typically the currently-fed decoder's `sampleIndex / sampleRate` at
@@ -279,18 +270,12 @@ class LtcClockModel {
   /// staleness would have caught it. Clears the window and the host-time
   /// mapping immediately so a stopped source never keeps reporting a
   /// running clock.
-  void onSignalLost() {
-    _lastObservationElapsed = null;
-    _native.onSignalLost();
-  }
+  void onSignalLost() => _native.onSignalLost();
 
   /// Full reset: clears the regression window, day-wrap offset and
   /// host-time mapping. Call this whenever the underlying sample-clock
   /// origin changes discontinuously in a way this model cannot itself infer
   /// from timecode content alone — e.g. capture restarted at a different
   /// sample rate, or the active channel changed.
-  void reset() {
-    _lastObservationElapsed = null;
-    _native.reset();
-  }
+  void reset() => _native.reset();
 }

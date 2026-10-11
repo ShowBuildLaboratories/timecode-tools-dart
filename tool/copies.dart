@@ -24,7 +24,8 @@ List<String> checkCopies(String root, {String? core}) {
     }
     final got = sha256.convert(file.readAsBytesSync()).toString();
     if (got != want) problems.add('$path was changed (sha256 $got)');
-    if (core != null) {
+    // Libraries built by CI (tool/add_native.dart) have no file in the core.
+    if (core != null && !from.startsWith('ci:')) {
       final src = File('$core/$from');
       if (!src.existsSync()) {
         problems.add('$from is missing in $core');
@@ -36,7 +37,9 @@ List<String> checkCopies(String root, {String? core}) {
   final goldens = Directory('$root/test/goldens');
   if (goldens.existsSync()) {
     for (final f in goldens.listSync(recursive: true).whereType<File>()) {
-      final rel = f.path.substring(root.length + 1);
+      final rel = f.path
+          .substring(root.length + 1)
+          .replaceAll(Platform.pathSeparator, '/');
       if (!listed.contains(rel)) {
         problems.add('$rel is not in core_copies.json');
       }

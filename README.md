@@ -181,6 +181,8 @@ for the target being built.
   the prebuilt libraries and the goldens from the core repository and
   records their SHA-256 in `core_copies.json`;
   `dart run tool/check_copies.dart [--core <dir>]` checks them.
+- `dart run tool/add_native.dart <dir> <core commit>` adds libraries built
+  by CI (the `native` jobs) and records them in `core_copies.json`.
 - `dart run tool/ffigen.dart` regenerates the bindings from
   `native/include/timecode_tools.h`.
 

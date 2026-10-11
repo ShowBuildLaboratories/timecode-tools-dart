@@ -24,6 +24,18 @@ void main(List<String> args) {
   final core = Directory(args.single).absolute.path;
   final root = File.fromUri(Platform.script).parent.parent.path;
   final copies = <Map<String, String>>[];
+  // Keep the libraries added from CI builds (tool/add_native.dart).
+  final manifest = File('$root/core_copies.json');
+  final kept = manifest.existsSync()
+      ? [
+          for (final e
+              in (jsonDecode(manifest.readAsStringSync())
+                      as Map<String, Object?>)['files']!
+                  as List)
+            if (((e as Map)['from'] as String).startsWith('ci:'))
+              e.cast<String, String>(),
+        ]
+      : <Map<String, String>>[];
 
   void copy(String from, String to) {
     final src = File('$core/$from');
@@ -71,6 +83,10 @@ void main(List<String> args) {
     copy('goldens/$rel', 'test/goldens/$rel');
   }
 
+  for (final e in kept) {
+    if (!copies.any((c) => c['path'] == e['path'])) copies.add(e);
+  }
+  copies.sort((a, b) => a['path']!.compareTo(b['path']!));
   File('$root/core_copies.json').writeAsStringSync(
     '${const JsonEncoder.withIndent('  ').convert({'files': copies})}\n',
   );

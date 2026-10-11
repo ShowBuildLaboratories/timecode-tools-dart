@@ -1,34 +1,69 @@
 {
   "files": [
     {
-      "path": "native/include/timecode_tools.h",
-      "from": "crates/timecode-tools-ffi/include/timecode_tools.h",
-      "sha256": "78fd0e1d17bb796f43875659d75541949f8eddd19f7147eb3576e7e780ae2442"
-    },
-    {
       "path": "native/aarch64-apple-darwin/libtimecode_tools_ffi.dylib",
       "from": "target/ffi-dist/aarch64-apple-darwin/libtimecode_tools_ffi.dylib",
-      "sha256": "faf7e02589535e13bf4975e0dfbf0c6d776edc0b8aece691d3ac2b5ec89a9099"
-    },
-    {
-      "path": "native/aarch64-apple-ios/libtimecode_tools_ffi.dylib",
-      "from": "target/ffi-dist/aarch64-apple-ios/libtimecode_tools_ffi.dylib",
-      "sha256": "7b9e5b917c38a665a886e9358509a7498241c4facd7805878c02c6d3f1099589"
+      "sha256": "a83d071788bd4009814f0146599e6ab60fc48f0b4d4092465109cf599b694f44"
     },
     {
       "path": "native/aarch64-apple-ios-sim/libtimecode_tools_ffi.dylib",
       "from": "target/ffi-dist/aarch64-apple-ios-sim/libtimecode_tools_ffi.dylib",
-      "sha256": "66475c7039add2307f5087b56ba4662680fac832bf3eef4a7be067a628537522"
+      "sha256": "3288de2e49b3aee0d24a028d314d6db80f047e5c9f8e08ae6a2c9770bf226eea"
+    },
+    {
+      "path": "native/aarch64-apple-ios/libtimecode_tools_ffi.dylib",
+      "from": "target/ffi-dist/aarch64-apple-ios/libtimecode_tools_ffi.dylib",
+      "sha256": "7098c9d1a0a6bf133e77615f64f4b84d8c2d5434be44b557c91d19ae7f9c6b86"
+    },
+    {
+      "path": "native/aarch64-linux-android/libtimecode_tools_ffi.so",
+      "from": "ci:85fab19ad3414075866a0b01110d94dfbde06ff7:aarch64-linux-android/libtimecode_tools_ffi.so",
+      "sha256": "914f16bd872c5775659f637f8839b888547f0939f17a94d0bb54ca7c230e0d43"
+    },
+    {
+      "path": "native/aarch64-pc-windows-msvc/timecode_tools_ffi.dll",
+      "from": "ci:85fab19ad3414075866a0b01110d94dfbde06ff7:aarch64-pc-windows-msvc/timecode_tools_ffi.dll",
+      "sha256": "0fb44628316f3de5587b328c15cc5f3685716179aca9cf935ae1d0a6a05499e2"
+    },
+    {
+      "path": "native/aarch64-unknown-linux-gnu/libtimecode_tools_ffi.so",
+      "from": "ci:85fab19ad3414075866a0b01110d94dfbde06ff7:aarch64-unknown-linux-gnu/libtimecode_tools_ffi.so",
+      "sha256": "91ae0cf8dca82bebd3da922852afefa720142e722a6bec63dbf8ad7f499434ef"
+    },
+    {
+      "path": "native/armv7-linux-androideabi/libtimecode_tools_ffi.so",
+      "from": "ci:85fab19ad3414075866a0b01110d94dfbde06ff7:armv7-linux-androideabi/libtimecode_tools_ffi.so",
+      "sha256": "03e14165d204efebf0a834a47aa433f218d4c7ca0ec0198242d62638080bcb62"
+    },
+    {
+      "path": "native/include/timecode_tools.h",
+      "from": "crates/timecode-tools-ffi/include/timecode_tools.h",
+      "sha256": "ec5d742c035205018733c93d2e32513e978d6acd3fbf36ae081979e39caf34a4"
     },
     {
       "path": "native/x86_64-apple-darwin/libtimecode_tools_ffi.dylib",
       "from": "target/ffi-dist/x86_64-apple-darwin/libtimecode_tools_ffi.dylib",
-      "sha256": "8467bd169dcf1e7a778a664fc104db9bc572c7f3228864f85a01a49a640c287c"
+      "sha256": "c9edcc42b7fc91c42cd25a690c7dbc9a86aa5b49cdf88d450b97c947920041c5"
     },
     {
       "path": "native/x86_64-apple-ios/libtimecode_tools_ffi.dylib",
       "from": "target/ffi-dist/x86_64-apple-ios/libtimecode_tools_ffi.dylib",
-      "sha256": "eeaabe312143fcab3ea1bbe69683883ec863dcd08777a13dddec02688510bca9"
+      "sha256": "c6ed8785d04e3e1d58fcde78a4f00f536a0a0d317b5f33b4f2774a794752c6f9"
+    },
+    {
+      "path": "native/x86_64-linux-android/libtimecode_tools_ffi.so",
+      "from": "ci:85fab19ad3414075866a0b01110d94dfbde06ff7:x86_64-linux-android/libtimecode_tools_ffi.so",
+      "sha256": "866437a704345611339272562a8f78d4db675ad9298257f200031a32195d844b"
+    },
+    {
+      "path": "native/x86_64-pc-windows-msvc/timecode_tools_ffi.dll",
+      "from": "ci:85fab19ad3414075866a0b01110d94dfbde06ff7:x86_64-pc-windows-msvc/timecode_tools_ffi.dll",
+      "sha256": "3d35700976856242d0df17dfd1b51023dbecc5bf83ac622cc0f68bd80d55de71"
+    },
+    {
+      "path": "native/x86_64-unknown-linux-gnu/libtimecode_tools_ffi.so",
+      "from": "ci:85fab19ad3414075866a0b01110d94dfbde06ff7:x86_64-unknown-linux-gnu/libtimecode_tools_ffi.so",
+      "sha256": "c3dc5d593aacb58affb2ef4bf19fd956b8c9d39ef1ff6c88b5265213c2b6f365"
     },
     {
       "path": "test/goldens/decoder-clock/clock_exact_30fps.json",

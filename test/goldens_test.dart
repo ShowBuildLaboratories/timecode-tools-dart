@@ -405,7 +405,7 @@ void main() {
 
   group('decoder goldens', () {
     for (final f in _files('decoder-clock')) {
-      if (!f.path.contains('/decoder_')) continue;
+      if (!f.uri.pathSegments.last.startsWith('decoder_')) continue;
       final golden = _load(f);
       test('${golden['name']}', () => _replayDecoder(golden));
     }
@@ -413,7 +413,7 @@ void main() {
 
   group('clock goldens', () {
     for (final f in _files('decoder-clock')) {
-      if (!f.path.contains('/clock_')) continue;
+      if (!f.uri.pathSegments.last.startsWith('clock_')) continue;
       final golden = _load(f);
       test('${golden['name']}', () => _replayClock(golden));
     }

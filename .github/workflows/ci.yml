@@ -1,6 +1,8 @@
-# Builds the native library for Linux, Windows and Android from the Rust
-# core, and runs the tests on every desktop platform. The Apple libraries
-# are committed under native/ (built on macOS).
+# Tests the package with the native libraries committed under native/, on
+# every desktop platform and on Android and iOS devices (emulator and
+# simulator). The `native` jobs rebuild the Linux, Windows and Android
+# libraries from the Rust core; to update the committed ones, download the
+# artifacts and run tool/add_native.dart.
 name: CI
 
 on:
@@ -70,8 +72,8 @@ jobs:
           path: out/${{ matrix.target }}
 
   test:
+    # Runs on the libraries committed under native/ (what the package ships).
     name: test ${{ matrix.os }}
-    needs: native
     strategy:
       fail-fast: false
       matrix:
@@ -82,50 +84,93 @@ jobs:
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: stable
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: native-*
-          path: native-ci
-      - name: Add the Linux and Windows libraries
-        shell: bash
-        run: |
-          for d in native-ci/native-*; do
-            t=${d#native-ci/native-}
-            mkdir -p native/$t
-            cp $d/* native/$t/
-          done
       - run: dart pub get
       - run: dart analyze --fatal-infos
       - run: dart run tool/check_copies.dart
       - run: dart test
 
+  flutter:
+    # Builds a small Flutter app with the package and runs a decode on a
+    # device: the Android emulator (x86_64) and the iOS simulator.
+    name: flutter ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { platform: android, os: ubuntu-22.04 }
+          - { platform: ios, os: macos-latest }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: timecode_tools
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Create the app
+        shell: bash
+        run: |
+          flutter create --platforms=${{ matrix.platform }} --org com.example check_app
+          cd check_app
+          flutter pub add 'timecode_tools:{"path":"../timecode_tools"}'
+          flutter pub add 'integration_test:{"sdk":"flutter"}' --dev
+          flutter pub add 'flutter_test:{"sdk":"flutter"}' --dev
+          mkdir -p integration_test
+          cat > integration_test/decode_test.dart <<'DART'
+          import 'dart:typed_data';
+
+          import 'package:flutter_test/flutter_test.dart';
+          import 'package:integration_test/integration_test.dart';
+          import 'package:timecode_tools/timecode_tools.dart';
+
+          void main() {
+            IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+            test('decodes LTC through the bundled native library', () {
+              final bytes = encodeLtcSequence(
+                sampleRate: 48000, fps: 25, startHours: 1, startMinutes: 0,
+                startSeconds: 0, startFrames: 0, frameCount: 10);
+              final decoder = LtcDecoder(sampleRate: 48000);
+              final frames = decoder.push(Int16List.view(bytes.buffer));
+              expect(frames.length, 10);
+              expect(frames.first.toString(), '01:00:00:00');
+              expect(decoder.locked, isTrue);
+            });
+          }
+          DART
+      - name: Build an APK (all ABIs)
+        if: matrix.platform == 'android'
+        working-directory: check_app
+        run: flutter build apk --debug
+      - name: Enable KVM
+        if: matrix.platform == 'android'
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Test on the Android emulator
+        if: matrix.platform == 'android'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          working-directory: check_app
+          script: flutter test integration_test -d emulator-5554
+      - name: Test on the iOS simulator
+        if: matrix.platform == 'ios'
+        working-directory: check_app
+        run: |
+          id=$(xcrun simctl list devices available -j | python3 -c "import json,sys; d=json.load(sys.stdin)['devices']; print(next(x['udid'] for k,v in d.items() if 'iOS' in k for x in v if 'iPhone' in x['name']))")
+          xcrun simctl boot "$id"
+          flutter test integration_test -d "$id"
+
   package:
-    name: package (all libraries)
-    needs: native
+    name: package
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: stable
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: native-*
-          path: native-ci
-      - name: Add the Linux and Windows libraries
-        run: |
-          for d in native-ci/native-*; do
-            t=${d#native-ci/native-}
-            mkdir -p native/$t
-            cp $d/* native/$t/
-          done
-          rm -rf native-ci
       - run: dart pub get
       - run: dart pub publish --dry-run
-      - uses: actions/upload-artifact@v4
-        with:
-          name: native-linux-windows-android
-          path: |
-            native/*-linux-gnu
-            native/*-windows-msvc
-            native/*-android*
