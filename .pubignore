@@ -1,0 +1,6 @@
+# Like .gitignore, plus files only needed to develop the package.
+.dart_tool/
+build/
+pubspec.lock
+doc/api/
+.github/

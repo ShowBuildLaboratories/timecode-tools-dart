@@ -1,0 +1,149 @@
+{
+  "files": [
+    {
+      "path": "native/include/timecode_tools.h",
+      "from": "crates/timecode-tools-ffi/include/timecode_tools.h",
+      "sha256": "78fd0e1d17bb796f43875659d75541949f8eddd19f7147eb3576e7e780ae2442"
+    },
+    {
+      "path": "native/aarch64-apple-darwin/libtimecode_tools_ffi.dylib",
+      "from": "target/ffi-dist/aarch64-apple-darwin/libtimecode_tools_ffi.dylib",
+      "sha256": "faf7e02589535e13bf4975e0dfbf0c6d776edc0b8aece691d3ac2b5ec89a9099"
+    },
+    {
+      "path": "native/aarch64-apple-ios/libtimecode_tools_ffi.dylib",
+      "from": "target/ffi-dist/aarch64-apple-ios/libtimecode_tools_ffi.dylib",
+      "sha256": "7b9e5b917c38a665a886e9358509a7498241c4facd7805878c02c6d3f1099589"
+    },
+    {
+      "path": "native/aarch64-apple-ios-sim/libtimecode_tools_ffi.dylib",
+      "from": "target/ffi-dist/aarch64-apple-ios-sim/libtimecode_tools_ffi.dylib",
+      "sha256": "66475c7039add2307f5087b56ba4662680fac832bf3eef4a7be067a628537522"
+    },
+    {
+      "path": "native/x86_64-apple-darwin/libtimecode_tools_ffi.dylib",
+      "from": "target/ffi-dist/x86_64-apple-darwin/libtimecode_tools_ffi.dylib",
+      "sha256": "8467bd169dcf1e7a778a664fc104db9bc572c7f3228864f85a01a49a640c287c"
+    },
+    {
+      "path": "native/x86_64-apple-ios/libtimecode_tools_ffi.dylib",
+      "from": "target/ffi-dist/x86_64-apple-ios/libtimecode_tools_ffi.dylib",
+      "sha256": "eeaabe312143fcab3ea1bbe69683883ec863dcd08777a13dddec02688510bca9"
+    },
+    {
+      "path": "test/goldens/decoder-clock/clock_exact_30fps.json",
+      "from": "goldens/decoder-clock/clock_exact_30fps.json",
+      "sha256": "ce61a76eebc10e1ad53bf94be6ff6a6ee945b12cb3893e0c037daa4032466615"
+    },
+    {
+      "path": "test/goldens/decoder-clock/clock_fractional_23976.json",
+      "from": "goldens/decoder-clock/clock_fractional_23976.json",
+      "sha256": "eb395a19c47ded66db4af4f491e4bf8a1aa3f53e3303aae19fe7a1fe584f05a9"
+    },
+    {
+      "path": "test/goldens/decoder-clock/clock_jam_reset.json",
+      "from": "goldens/decoder-clock/clock_jam_reset.json",
+      "sha256": "32ab3ad127812cf81ae5526dd286ad94540d4bdacb12cea4d04f49dd0bea293b"
+    },
+    {
+      "path": "test/goldens/decoder-clock/clock_jitter_20ms.json",
+      "from": "goldens/decoder-clock/clock_jitter_20ms.json",
+      "sha256": "d734dfaccbc61d80fee0dc3896bb4a254e4eb3d963830b47c4819bdeaf678063"
+    },
+    {
+      "path": "test/goldens/decoder-clock/clock_long_session_100000s.json",
+      "from": "goldens/decoder-clock/clock_long_session_100000s.json",
+      "sha256": "7906027010ec857d46093fd796e2605d9ee68ec7b932d307dfde965ba6809270"
+    },
+    {
+      "path": "test/goldens/decoder-clock/clock_midnight_unwrap.json",
+      "from": "goldens/decoder-clock/clock_midnight_unwrap.json",
+      "sha256": "99208f19da2dadd7794662d78bdc12e857595cfd7cfbaf0cadb4c7cc4e430afb"
+    },
+    {
+      "path": "test/goldens/decoder-clock/clock_staleness_scripted.json",
+      "from": "goldens/decoder-clock/clock_staleness_scripted.json",
+      "sha256": "7f9ef59b2f5d717bb27bc856a78d0a4a03f2a39af262fa9c2bf9401a3e66d015"
+    },
+    {
+      "path": "test/goldens/decoder-clock/clock_varispeed_half_percent.json",
+      "from": "goldens/decoder-clock/clock_varispeed_half_percent.json",
+      "sha256": "3641e3084f4e31176c2d31e3d0284dc373aa5237e25ee6ca75e3287f4cf67294"
+    },
+    {
+      "path": "test/goldens/decoder-clock/decoder_16ch_interleave_music_ch1.json",
+      "from": "goldens/decoder-clock/decoder_16ch_interleave_music_ch1.json",
+      "sha256": "42d644aaaecce0608216265cdb288cf6461d17efdc47641ccd0abd68a1c6935c"
+    },
+    {
+      "path": "test/goldens/decoder-clock/decoder_ascending_25fps_uneven_chunks.json",
+      "from": "goldens/decoder-clock/decoder_ascending_25fps_uneven_chunks.json",
+      "sha256": "003561cea90dd3267f4443a554ac4a0f915d6f5fce39b10061bade6657ea3568"
+    },
+    {
+      "path": "test/goldens/decoder-clock/decoder_df_boundary.json",
+      "from": "goldens/decoder-clock/decoder_df_boundary.json",
+      "sha256": "4372daf6e6e21ea4fabc9397be6562dc22780aad17da66b02ee4870cdb637aad"
+    },
+    {
+      "path": "test/goldens/decoder-clock/decoder_full_cell_bootstrap.json",
+      "from": "goldens/decoder-clock/decoder_full_cell_bootstrap.json",
+      "sha256": "56e343108df647291c10ddd933645320ccd803d164bf71c88d198adb1d03d649"
+    },
+    {
+      "path": "test/goldens/decoder-clock/decoder_inverted_polarity.json",
+      "from": "goldens/decoder-clock/decoder_inverted_polarity.json",
+      "sha256": "f4e20bd2db723b70b33cfa86dac76c0c9983449afac4687c54dc46aeb43baafd"
+    },
+    {
+      "path": "test/goldens/decoder-clock/decoder_odd_length_byte_carry.json",
+      "from": "goldens/decoder-clock/decoder_odd_length_byte_carry.json",
+      "sha256": "bbe970ebfa6125be1242524164999ae31a14972ab4b404ce84d8988d1816a998"
+    },
+    {
+      "path": "test/goldens/decoder-clock/decoder_silence.json",
+      "from": "goldens/decoder-clock/decoder_silence.json",
+      "sha256": "fb529213a25683d330968643ee2377ff9962d36525957e317894e9b4202dcfbf"
+    },
+    {
+      "path": "test/goldens/decoder-clock/decoder_white_noise.json",
+      "from": "goldens/decoder-clock/decoder_white_noise.json",
+      "sha256": "eef0e89a81e1af8ac25dc3b6e0e9d1e986920a70ff7386c7749531a787bfa432"
+    },
+    {
+      "path": "test/goldens/receiver/ltc_24_stereo_channel2_fixed_rate.json",
+      "from": "goldens/receiver/ltc_24_stereo_channel2_fixed_rate.json",
+      "sha256": "dd2881ce11b42cb0992f905e97d3b0faafd027076c654f752bdf5c8c424d543e"
+    },
+    {
+      "path": "test/goldens/receiver/ltc_25_lock_jump_loss_relock.json",
+      "from": "goldens/receiver/ltc_25_lock_jump_loss_relock.json",
+      "sha256": "6c8d5ec832147d8adb85a756498cde9813eadb22947727ea003cec65d007e140"
+    },
+    {
+      "path": "test/goldens/receiver/ltc_2997df_offset_corrupt.json",
+      "from": "goldens/receiver/ltc_2997df_offset_corrupt.json",
+      "sha256": "0ce6049dff047b4ac0d16b2219d1cb254f354fa257aa7dfb50352e0dcd5b59a8"
+    },
+    {
+      "path": "test/goldens/receiver/ltc_30_midnight.json",
+      "from": "goldens/receiver/ltc_30_midnight.json",
+      "sha256": "6b740b7e5f272677f51f30f00023481901a6a2d547a3e843af472db08d99eb83"
+    },
+    {
+      "path": "test/goldens/receiver/mtc_25_lock_locate_relock.json",
+      "from": "goldens/receiver/mtc_25_lock_locate_relock.json",
+      "sha256": "98674cf55aebbe2234d2d62a9b7d916a7cfcf49dcf5c8ec359660793007857f0"
+    },
+    {
+      "path": "test/goldens/receiver/mtc_2997df_relocate_noise_offset.json",
+      "from": "goldens/receiver/mtc_2997df_relocate_noise_offset.json",
+      "sha256": "7715a7a991a3ed59eaa30887199c87441b069f145eb8da14f18bd93c776ae2dd"
+    },
+    {
+      "path": "test/goldens/receiver/mtc_30_stop.json",
+      "from": "goldens/receiver/mtc_30_stop.json",
+      "sha256": "5b87f3aa008c0465cae2a84b77aeb74f471e8119308a172d1e63d4657b2393fe"
+    }
+  ]
+}

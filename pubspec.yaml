@@ -1,0 +1,27 @@
+name: timecode_tools
+description: >-
+  SMPTE timecode reader. Reads LTC from a stream of PCM audio and MTC from a
+  stream of MIDI bytes: 24, 25, 29.97 drop-frame and 30 fps, lock status and
+  a jitter-free clock. Backed by the timecode-tools Rust core through dart:ffi.
+version: 0.1.0
+repository: https://github.com/ShowBuildLaboratories/timecode-tools-dart
+issue_tracker: https://github.com/ShowBuildLaboratories/timecode-tools-dart/issues
+topics:
+  - timecode
+  - smpte
+  - ltc
+  - audio
+  - midi
+
+environment:
+  sdk: ">=3.10.0 <4.0.0"
+
+dependencies:
+  code_assets: ">=1.0.0 <3.0.0"
+  ffi: ^2.2.0
+  hooks: ">=1.0.0 <3.0.0"
+dev_dependencies:
+  crypto: ^3.0.7
+  ffigen: ^23.0.0
+  lints: ^6.1.0
+  test: ^1.33.0

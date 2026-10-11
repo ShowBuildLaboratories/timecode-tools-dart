@@ -1,0 +1,131 @@
+# Builds the native library for Linux, Windows and Android from the Rust
+# core, and runs the tests on every desktop platform. The Apple libraries
+# are committed under native/ (built on macOS).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      core_ref:
+        description: timecode-tools-rs ref to build the native library from
+        required: false
+        default: main
+
+env:
+  CORE_REPO: ShowBuildLaboratories/timecode-tools-rs
+  CORE_REF: ${{ github.event.inputs.core_ref || 'main' }}
+
+jobs:
+  native:
+    name: native ${{ matrix.target }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-22.04, target: x86_64-unknown-linux-gnu, lib: libtimecode_tools_ffi.so }
+          - { os: ubuntu-22.04-arm, target: aarch64-unknown-linux-gnu, lib: libtimecode_tools_ffi.so }
+          - { os: windows-latest, target: x86_64-pc-windows-msvc, lib: timecode_tools_ffi.dll }
+          - { os: windows-11-arm, target: aarch64-pc-windows-msvc, lib: timecode_tools_ffi.dll }
+          - { os: ubuntu-22.04, target: aarch64-linux-android, lib: libtimecode_tools_ffi.so, android: true }
+          - { os: ubuntu-22.04, target: armv7-linux-androideabi, lib: libtimecode_tools_ffi.so, android: true }
+          - { os: ubuntu-22.04, target: x86_64-linux-android, lib: libtimecode_tools_ffi.so, android: true }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.CORE_REPO }}
+          ref: ${{ env.CORE_REF }}
+          path: core
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - name: Build
+        if: ${{ !matrix.android }}
+        working-directory: core
+        shell: bash
+        run: cargo build --release --locked -p timecode-tools-ffi --target ${{ matrix.target }}
+      - name: Build (Android NDK)
+        if: ${{ matrix.android }}
+        working-directory: core
+        env:
+          # 16 KB pages, required by current Android versions.
+          RUSTFLAGS: -C link-arg=-Wl,-z,max-page-size=16384
+        run: |
+          cargo install cargo-ndk --locked
+          export ANDROID_NDK_HOME=$ANDROID_NDK_LATEST_HOME
+          cargo ndk --target ${{ matrix.target }} --platform 21 build --release --locked -p timecode-tools-ffi
+      - name: Collect
+        shell: bash
+        run: |
+          mkdir -p out/${{ matrix.target }}
+          cp core/target/${{ matrix.target }}/release/${{ matrix.lib }} out/${{ matrix.target }}/
+          cd out/${{ matrix.target }}
+          if command -v sha256sum >/dev/null; then sha256sum ${{ matrix.lib }} > SHA256SUMS; else shasum -a 256 ${{ matrix.lib }} > SHA256SUMS; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-${{ matrix.target }}
+          path: out/${{ matrix.target }}
+
+  test:
+    name: test ${{ matrix.os }}
+    needs: native
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-22.04-arm, windows-latest, windows-11-arm, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: native-*
+          path: native-ci
+      - name: Add the Linux and Windows libraries
+        shell: bash
+        run: |
+          for d in native-ci/native-*; do
+            t=${d#native-ci/native-}
+            mkdir -p native/$t
+            cp $d/* native/$t/
+          done
+      - run: dart pub get
+      - run: dart analyze --fatal-infos
+      - run: dart run tool/check_copies.dart
+      - run: dart test
+
+  package:
+    name: package (all libraries)
+    needs: native
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: native-*
+          path: native-ci
+      - name: Add the Linux and Windows libraries
+        run: |
+          for d in native-ci/native-*; do
+            t=${d#native-ci/native-}
+            mkdir -p native/$t
+            cp $d/* native/$t/
+          done
+          rm -rf native-ci
+      - run: dart pub get
+      - run: dart pub publish --dry-run
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-linux-windows-android
+          path: |
+            native/*-linux-gnu
+            native/*-windows-msvc
+            native/*-android*
