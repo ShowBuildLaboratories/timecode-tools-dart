@@ -1,8 +1,8 @@
-// Adds native libraries built elsewhere (the CI artifact
-// `native-linux-windows-android`, built from the Rust core) to native/ and
+// Adds native libraries built elsewhere (a Release of the Rust core, or the
+// `native-*` artifacts of this CI) to native/ and
 // records them in core_copies.json.
 //
-//   dart run tool/add_native.dart <dir with <target>/ folders> <core commit>
+//   dart run tool/add_native.dart <dir with <target>/ folders> <source>
 //
 // Each <target>/ folder must hold the library and its SHA256SUMS.
 import 'dart:convert';
@@ -12,7 +12,7 @@ import 'package:crypto/crypto.dart';
 
 void main(List<String> args) {
   if (args.length != 2) {
-    stderr.writeln('usage: dart run tool/add_native.dart <dir> <core commit>');
+    stderr.writeln('usage: dart run tool/add_native.dart <dir> <source>');
     exit(2);
   }
   final root = File.fromUri(Platform.script).parent.parent.path;

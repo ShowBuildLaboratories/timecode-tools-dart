@@ -113,8 +113,7 @@ jobs:
           flutter create --platforms=${{ matrix.platform }} --org com.example check_app
           cd check_app
           flutter pub add 'timecode_tools:{"path":"../timecode_tools"}'
-          flutter pub add 'integration_test:{"sdk":"flutter"}' --dev
-          flutter pub add 'flutter_test:{"sdk":"flutter"}' --dev
+          flutter pub add 'dev:integration_test:{"sdk":"flutter"}'
           mkdir -p integration_test
           cat > integration_test/decode_test.dart <<'DART'
           import 'dart:typed_data';
