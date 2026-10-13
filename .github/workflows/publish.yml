@@ -1,0 +1,46 @@
+# Publishes to pub.dev when a version tag (v1.2.3) is pushed.
+#
+# pub.dev trusts this repository's GitHub Actions for tags matching
+# v{{version}}, in the `release` environment (which needs a maintainer's
+# approval). See CONTRIBUTING.md for the release steps.
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+
+jobs:
+  check:
+    name: check ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - name: The tag matches the version in pubspec.yaml
+        shell: bash
+        run: |
+          version=$(sed -n 's/^version: *//p' pubspec.yaml)
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match pubspec.yaml version $version"
+            exit 1
+          fi
+          grep -q "^## $version\$" CHANGELOG.md || { echo "CHANGELOG.md has no '## $version'"; exit 1; }
+      - run: dart pub get
+      - run: dart analyze --fatal-infos
+      - run: dart run tool/check_copies.dart
+      - run: dart test
+      - run: dart pub publish --dry-run
+
+  publish:
+    needs: check
+    permissions:
+      id-token: write # for the OIDC token pub.dev accepts
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+    with:
+      environment: release

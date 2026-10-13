@@ -187,6 +187,12 @@ for the target being built.
 - `dart run tool/ffigen.dart` regenerates the bindings from
   `native/include/timecode_tools.h`.
 
+## Releasing
+
+Versions are published to pub.dev from GitHub Actions: update the version
+and the changelog, push a `v<version>` tag, and approve the run in the
+`release` environment. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
